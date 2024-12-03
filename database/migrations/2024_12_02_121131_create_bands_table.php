@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bands', function (Blueprint $table) {
             $table->id('id'); // unsigned by default
-            $table->string('band_name');
+            $table->string('name');
             $table->bigInteger('owner_id')->unsigned();
             $table->timestamps();
         });

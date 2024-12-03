@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('band_members', function (Blueprint $table) {
             $table->bigInteger('band_id')->unsigned();
-            $table->string('band_name');
             $table->bigInteger('member_id')->unsigned();
-            $table->string('member_name');
         });
     }
 
