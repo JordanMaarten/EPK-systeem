@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bands', function (Blueprint $table) {
-            $table->id('band_id');
+            $table->id('id'); // unsigned by default
             $table->string('band_name');
-            $table->bigInteger('owner_id');
+            $table->bigInteger('owner_id')->unsigned();
             $table->timestamps();
         });
     }
