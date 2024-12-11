@@ -8,6 +8,21 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+// On page load or when changing themes, best to add inline in `head` to avoid FOUC
+document.documentElement.classList.toggle(
+  'dark',
+  localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+)
+
+// Whenever the user explicitly chooses light mode
+//localStorage.theme = 'light'
+
+// Whenever the user explicitly chooses dark mode
+//localStorage.theme = 'dark'
+
+// Whenever the user explicitly chooses to respect the OS preference
+localStorage.removeItem('theme')
 </script>
 
 <template>
@@ -30,7 +45,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('bands')" :active="route().current('bands')">
+                                <NavLink :href="route('bands.show')" :active="route().current('bands.show')">
                                     Bands
                                 </NavLink>
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
