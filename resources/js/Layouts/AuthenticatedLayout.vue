@@ -1,14 +1,28 @@
 <script setup>
-    import { ref } from 'vue';
+import { ref } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { Link } from '@inertiajs/vue3';
 
-    import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-    import Dropdown from '@/Components/Dropdown.vue';
-    import DropdownLink from '@/Components/DropdownLink.vue';
-    import NavLink from '@/Components/NavLink.vue';
-    import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-    import { Link } from '@inertiajs/vue3';
+const showingNavigationDropdown = ref(false);
 
-    const showingNavigationDropdown = ref(false);
+// On page load or when changing themes, best to add inline in `head` to avoid FOUC
+document.documentElement.classList.toggle(
+  'dark',
+  localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+)
+
+// Whenever the user explicitly chooses light mode
+//localStorage.theme = 'light'
+
+// Whenever the user explicitly chooses dark mode
+//localStorage.theme = 'dark'
+
+// Whenever the user explicitly chooses to respect the OS preference
+localStorage.removeItem('theme')
 </script>
 
 <template>
