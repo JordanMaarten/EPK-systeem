@@ -5,8 +5,12 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { useDark, useToggle } from '@vueuse/core';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
