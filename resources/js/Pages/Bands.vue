@@ -1,10 +1,29 @@
 <script setup>
 
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import Table from '@/Components/Table.vue';
-    import TableHeader from '@/Components/TableHeader.vue';
-    import TableData from '@/Components/TableData.vue';
-    import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { Head } from '@inertiajs/vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+
+// placeholder array
+const band_cards = ref([
+    {name: 'band 1', descryption: 'dit is de beschrijving van band 1MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
+    {name: 'band 2', descryption: 'dit is de beschrijving van band 2'}, 
+    {name: 'band 3', descryption: 'dit is de beschrijving van band 3'}, 
+    {name: 'band 4', descryption: 'dit is de beschrijving van band 4MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
+    {name: 'band 5', descryption: 'dit is de beschrijving van band 5'}, 
+    {name: 'band 6', descryption: 'dit is de beschrijving van band 6'}, 
+    {name: 'band 7', descryption: 'dit is de beschrijving van band 7MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
+    {name: 'band 8', descryption: 'dit is de beschrijving van band 8'}, 
+    {name: 'band 9', descryption: 'dit is de beschrijving van band 9MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
+    {name: 'band 10', descryption: 'dit is de beschrijving van band 10'}, 
+    {name: 'band 11', descryption: 'dit is de beschrijving van band 11'}, 
+    {name: 'band 12', descryption: 'dit is de beschrijving van band 12'}, 
+    {name: 'band 13', descryption: 'dit is de beschrijving van band 13MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
+    {name: 'band 14', descryption: 'dit is de beschrijving van band 14'}, 
+]);
 
 </script>
 
@@ -17,40 +36,34 @@
                 Bands
             </h2>
         </template>
-        <div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
-            <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]" style="background-position: 10px 10px;"></div>
-            <div class="relative rounded-xl overflow-auto">
-                <div class="shadow-sm overflow-hidden my-8">
-                    <Table>
-                        <template #thead>
-                            <tr>
-                                <TableHeader>Head1</TableHeader>
-                                <TableHeader>Head2</TableHeader>
-                                <TableHeader>Head3</TableHeader>
-                                <TableHeader>Head4</TableHeader>
-                            </tr>
-                        </template>
-                        <template #tbody>
-                            <tr>
-                                <TableData>Body1</TableData>
-                                <TableData>Body2</TableData>
-                                <TableData>Body3</TableData>
-                                <TableData>Body4</TableData>
-                            </tr>
-                            <tr>
-                                <TableData>Body5</TableData>
-                                <TableData>Body6</TableData>
-                                <TableData>Body7</TableData>
-                                <TableData>Body8</TableData>
-                            </tr>
-                            <tr>
-                                <TableData>Body9</TableData>
-                                <TableData>Body10</TableData>
-                                <TableData>Body11</TableData>
-                                <TableData>Body12</TableData>
-                            </tr>
-                        </template>
-                    </Table>
+        <div class="px-[8em]">
+            <div class="relative pt-8 flex justify-center">
+                <div class="w-[40em] flex">
+                    <TextInput type="text" class="grow"/>
+                    <PrimaryButton class="ms-4 float-right">Zoeken</PrimaryButton>
+                </div>
+            </div>
+        </div>
+        <div class="px-[8em]">
+            <div class="relative pt-8 overflow-auto">
+                <div class="columns-4">
+                    <div class="bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 break-inside-avoid-column" v-for="(band_card, index) in band_cards" :class="{'mt-5' : index != 0}" :href="route('dashboard')">
+                        <div class="relative">
+                            <a :href="href">
+                                <div class="absolute inset-0 shadow-[inset_0px_-30px_20px_-10px_rgba(31,41,55,1.0)]"></div>
+                                <img class="rounded-t-lg" src="@/../assets/example.jpg" alt="">
+                            </a>
+                        </div>
+                        <div class="p-5">
+                            <a :href="href">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ band_card.name }}</h5>
+                                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 break-words">   
+                                    {{ band_card.descryption }}
+                                </p>
+                                <SecondaryButton>Read more</SecondaryButton>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
