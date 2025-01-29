@@ -1,4 +1,5 @@
 <script setup>
+
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const props = defineProps({
@@ -42,6 +43,7 @@ const alignmentClasses = computed(() => {
 });
 
 const open = ref(false);
+
 </script>
 
 <template>
