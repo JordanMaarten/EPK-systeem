@@ -7,6 +7,14 @@ import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 
+const props = defineProps({
+    bands: {
+        type: Object
+    },
+});
+
+console.log(props.bands);
+
 // placeholder array
 const band_cards = ref([
     {name: 'band 1', descryption: 'dit is de beschrijving van band 1MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
@@ -25,6 +33,8 @@ const band_cards = ref([
     {name: 'band 14', descryption: 'dit is de beschrijving van band 14'}, 
 ]);
 
+const searchterm = "";
+
 </script>
 
 <template>
@@ -39,7 +49,7 @@ const band_cards = ref([
         <div class="px-[8em]">
             <div class="relative pt-8 flex justify-center">
                 <div class="w-[40em] flex">
-                    <TextInput type="text" class="grow"/>
+                    <TextInput type="text" class="grow" v-model="searchterm"/>
                     <PrimaryButton class="ms-4 float-right">Zoeken</PrimaryButton>
                 </div>
             </div>
@@ -49,13 +59,13 @@ const band_cards = ref([
                 <div class="columns-4">
                     <div class="bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 break-inside-avoid-column" v-for="(band_card, index) in band_cards" :class="{'mt-5' : index != 0}" :href="route('dashboard')">
                         <div class="relative">
-                            <a :href="href">
+                            <a href="">
                                 <div class="absolute inset-0 shadow-[inset_0px_-30px_20px_-10px_rgba(31,41,55,1.0)]"></div>
                                 <img class="rounded-t-lg" src="@/../assets/example.jpg" alt="">
                             </a>
                         </div>
                         <div class="p-5">
-                            <a :href="href">
+                            <a href="">
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ band_card.name }}</h5>
                                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 break-words">   
                                     {{ band_card.descryption }}
