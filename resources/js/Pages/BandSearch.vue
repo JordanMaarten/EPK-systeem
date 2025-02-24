@@ -13,8 +13,6 @@ const props = defineProps({
     },
 });
 
-console.log(props.bands);
-
 // placeholder array
 const band_cards = ref([
     {name: 'band 1', descryption: 'dit is de beschrijving van band 1MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM'}, 
