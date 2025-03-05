@@ -24,7 +24,7 @@ class TestController extends Controller
             $band_members = BandMember::where('band_id', $band_id)->get();
             if ($band_members->contains('member_id', $user_id)) 
             {
-                return Inertia::render("TEST/test", $epk->html_data);
+                return Inertia::render("TEST/EPKEditConcept", $epk->html_data);
             } else
             {
                 echo "You are not authorized to view this page... <a href='/'>go back</a>";
@@ -39,7 +39,7 @@ class TestController extends Controller
             $band_members = BandMember::where('band_id', $band_id)->get();
             if ($band_members->contains('member_id', $user_id)) 
             {
-                return Inertia::render("TEST/test", [
+                return Inertia::render("TEST/EPKEditConcept", [
                     "saved_data" => $epk->html_data,
                     "epk_id" => $test_id
                 ]);

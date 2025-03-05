@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import Divider from '@/Components/Divider.vue';
 import LoadingSpinner from '@/Components/LoadingSpinner.vue';
 
 const props = defineProps({
@@ -81,6 +82,10 @@ onMounted(() => {
         </template>
         <div id="main" class="px-[8em]">
             <div id="content" ref="content"></div>
+            <Divider/>
+            <div class="flex justify-center">
+                <SecondaryButton class="w-[36em] justify-center bg-emerald-500 text-white hover:bg-emerald-600">Add new row +</SecondaryButton>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>
