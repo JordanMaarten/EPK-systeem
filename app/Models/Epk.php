@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Epk extends Model
 {
     protected $fillable = [
-        'name'
+        'name',
+        'html_data'
     ];
 }
