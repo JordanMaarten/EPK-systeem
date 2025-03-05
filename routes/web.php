@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/bands', [BandSearchController::class, 'index'])->name('bandsearch.index');
 
     Route::get('/test', [TestController::class, 'index'])->name('test.index');
+    Route::post('/test/store', [TestController::class, 'store'])->name('test.store');
 });
 
 require __DIR__.'/auth.php';

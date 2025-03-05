@@ -2,31 +2,22 @@
 
 import { onMounted, ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import LoadingSpinner from '@/Components/LoadingSpinner.vue';
 
-const submit = () => {
-    form.post(route('testController'), {
-
-    });
-};
-
-const form = useForm({
-    html: '',
-    processing: false,
+const props = defineProps({
+    epk_id: String, 
+    saved_data: String 
 });
 
 const content = ref();
-const saved_content = new DOMParser().parseFromString('<div class="content_body"><h1>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h1><p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo aliquid veritatis enim ad? Ea possimus, neque fugiat ut earum nihil nulla autem totam repudiandae iste beatae nobis in voluptatem eveniet.</p></div>', 'text/html').body;
+const saved_content = new DOMParser().parseFromString(props.saved_data, 'text/html').body;
 const parse_error = saved_content.querySelector("parsererror");
 
-function HTMLtoString() {
-    let content_string = content.value.innerHTML;
-    console.log(content_string);
-}
+const savingHTML = ref(false);
 
 onMounted(() => {
     if (parse_error) 
@@ -44,11 +35,32 @@ onMounted(() => {
             document.getElementById("content").innerHTML = "Oops something went wrong... Could not display saved content."
         }
     }
-});
 
-setInterval(function () {
+    function saveHTML() {
+        savingHTML.value = true;
+        
+        axios.post('/test/store', {
+            epk_id: props.epk_id,
+            data: content.value.innerHTML
+        }).then(function (response) {
+            console.log(response);
+            console.log("Succesfully saved data to DB");
+        }).catch(function (response) {
+            console.log(response);
+        }).finally(() => {
+            savingHTML.value = false;
+        });
+    }
+
+    document.getElementById("saveButton").addEventListener("click", (event) => {
+        saveHTML();
+    });
+
+    // use later for automatic saving
+    setInterval(function () {
     
-}, 1000);
+    } , 5000);
+});
 
 </script>
 
@@ -57,21 +69,18 @@ setInterval(function () {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Test
-            </h2>
+            <div class="flex justify-between">
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                    Test
+                </h2>
+                <span class="inline-flex justify-between items-center gap-4">
+                    <LoadingSpinner :class="{hidden : !savingHTML}"></LoadingSpinner>
+                    <SecondaryButton id="saveButton">Save</SecondaryButton>
+                </span>
+            </div>
         </template>
-        <div class="px-[8em]">
-            <form @submit.prevent="submit">
-                <div id="content" ref="content"></div>
-                <SecondaryButton @click="HTMLtoString()">Save</SecondaryButton>
-                <!-- <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Save
-                </PrimaryButton> -->
-            </form>
+        <div id="main" class="px-[8em]">
+            <div id="content" ref="content"></div>
         </div>
     </AuthenticatedLayout>
 </template>
