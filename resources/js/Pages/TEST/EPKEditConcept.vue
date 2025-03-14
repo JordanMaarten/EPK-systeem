@@ -3,6 +3,9 @@
 import { onMounted, ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
+import * as CMS from '@/Scripts/CMS';
+
+import testComponent from '@/Components/test/testComponent.vue';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -11,7 +14,7 @@ import LoadingSpinner from '@/Components/LoadingSpinner.vue';
 
 const props = defineProps({
     epk_id: String, 
-    saved_data: String 
+    saved_data: String
 });
 
 const content = ref();
@@ -29,11 +32,11 @@ onMounted(() => {
         try 
         {
             console.log("Successfuly displayed saved content")
-            document.getElementById("content").appendChild(saved_content.firstChild);
+            content.value.appendChild(saved_content);
         } catch 
         {
             console.log('Error while appending child to element with id = "content".');
-            document.getElementById("content").innerHTML = "Oops something went wrong... Could not display saved content."
+            content.value.innerHTML = "Oops something went wrong... Could not display saved content."
         }
     }
 
@@ -57,10 +60,16 @@ onMounted(() => {
         saveHTML();
     });
 
+    document.getElementById("addRow").addEventListener("click", (event) => {
+        CMS.appendRow(content.value.getElementsByTagName("body")[0]);
+    });
+
     // use later for automatic saving
     setInterval(function () {
     
     } , 5000);
+
+    console.log(CMS.hooktest);
 });
 
 </script>
@@ -81,10 +90,14 @@ onMounted(() => {
             </div>
         </template>
         <div id="main" class="px-[8em]">
-            <div id="content" ref="content"></div>
+            <div id="content" ref="content">
+                <body>
+                    <testComponent></testComponent>
+                </body>
+            </div>
             <Divider/>
             <div class="flex justify-center">
-                <SecondaryButton class="w-[36em] justify-center bg-emerald-500 text-white hover:bg-emerald-600">Add new row +</SecondaryButton>
+                <SecondaryButton id="addRow" class="w-[36em] justify-center text-white !bg-emerald-500 !hover:bg-emerald-600">Add new row +</SecondaryButton>
             </div>
         </div>
     </AuthenticatedLayout>
