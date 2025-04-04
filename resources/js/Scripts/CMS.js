@@ -24,14 +24,7 @@ const CMS_elements = {
 
 const elements = {
     row : () => {let el = document.createElement("div"); el.classList.add("relative", "flex", "justify-between"); return el;},
-}
-
-const global_elements = {
-    group : {
-        text_block : () => {
-            let el = document.createElement("span"); return el;
-        }
-    }
+    p : () => {let el = document.createElement("p"); el.innerText = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam, quidem vitae doloremque mollitia ut in nobis velit quia impedit harum officiis cumque, excepturi sint exercitationem consequatur totam, eos deleniti fuga."; return el;},
 }
 
 // Methods
@@ -70,13 +63,21 @@ export function getCMSElement(key) {
     return elements[key]();
 }
 
-export function addRow(target_id) {
-    let target = document.getElementById(target_id);
-    let row = getCMSElement("row");
-    let elements_keys = Object.keys(global_elements);
+export function showSidebar(key) {
+    document.getElementById("CMSSidebar").setAttribute("aria-hidden", "false");
 
-    console.log(elements_keys);
-    
+    document.getElementById("sidebarOverlay").classList.remove("hidden");
+    document.getElementById("sidebarOverlay").classList.add("fixed");
+}
+
+export function hideSidebar() {
+    document.getElementById("CMSSidebar").setAttribute("aria-hidden", "true");
+
+    document.getElementById("sidebarOverlay").addEventListener("transitionend", function transitionEnd() {
+        document.getElementById("sidebarOverlay").classList.remove("fixed");
+        document.getElementById("sidebarOverlay").classList.add("hidden");
+        this.removeEventListener("transitionend", transitionEnd);
+    });
 }
 
 export function appendElement(target_id, key) {
@@ -84,4 +85,11 @@ export function appendElement(target_id, key) {
     let element = getCMSElement(key);
     
     target.insertAdjacentElement("afterend", element);
+}
+
+export function insertElement(target_id, key) {
+    let target = document.getElementById(target_id);
+    let element = getCMSElement(key);
+    
+    target.appendChild(element);
 }

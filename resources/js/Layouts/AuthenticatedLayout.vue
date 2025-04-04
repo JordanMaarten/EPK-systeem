@@ -10,12 +10,25 @@ import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 
+window.addEventListener("scroll", (event) => {
+    console.log(document.getElementById("primaryNav").getBoundingClientRect().top);
+    if (document.getElementById("primaryNav").getBoundingClientRect().bottom <= 0) {
+        document.getElementById("primaryNav").style.marginBottom = document.getElementsByTagName('header')[0].offsetHeight + "px";
+        document.getElementsByTagName("header")[0].classList.remove("relative");
+        document.getElementsByTagName("header")[0].classList.add("fixed");
+    } else {
+        document.getElementById("primaryNav").style.marginBottom = "0px";
+        document.getElementsByTagName("header")[0].classList.remove("fixed");
+        document.getElementsByTagName("header")[0].classList.add("relative");
+    }
+})
+
 </script>
 
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
-            <nav class="relative z-20 border-b border-gray-100 bg-white">
+            <nav id="primaryNav" class="z-30 relative w-full border-b border-gray-100 bg-white">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between">
@@ -134,7 +147,7 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Heading -->
-            <header class="relative z-10 bg-white shadow" v-if="$slots.header">
+            <header class="z-20 relative top-0 w-full bg-white shadow" v-if="$slots.header">
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

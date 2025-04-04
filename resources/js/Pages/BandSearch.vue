@@ -43,6 +43,7 @@ const searchterm = "";
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Bands
             </h2>
+            <h1></h1>
         </template>
         <div class="px-[8em]">
             <div class="relative pt-8 flex justify-center">
@@ -68,7 +69,7 @@ const searchterm = "";
                                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 break-words">   
                                     {{ band_card.descryption }}
                                 </p>
-                                <SecondaryButton>Read more</SecondaryButton>
+                                <SecondaryButton @click="">Read more</SecondaryButton>
                             </a>
                         </div>
                     </div>
