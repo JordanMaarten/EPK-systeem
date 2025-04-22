@@ -11,7 +11,6 @@ import { Link } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 window.addEventListener("scroll", (event) => {
-    console.log(document.getElementById("primaryNav").getBoundingClientRect().top);
     if (document.getElementById("primaryNav").getBoundingClientRect().bottom <= 0) {
         document.getElementById("primaryNav").style.marginBottom = document.getElementsByTagName('header')[0].offsetHeight + "px";
         document.getElementsByTagName("header")[0].classList.remove("relative");
@@ -147,7 +146,7 @@ window.addEventListener("scroll", (event) => {
             </nav>
 
             <!-- Page Heading -->
-            <header class="z-20 relative top-0 w-full bg-white shadow" v-if="$slots.header">
+            <header id="header" class="z-20 relative top-0 w-full bg-white shadow" v-if="$slots.header">
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

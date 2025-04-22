@@ -12,15 +12,7 @@ window.onload = (event) => {
 
 // Elements
 
-const CMS_elements = {
-    element_selector : () => {
-        let el = document.createElement("div"); 
-        //el.classList.add("relative", "flex", "justify-between");
-
-        let elements_keys = Object.keys(elements);
-        return el;
-    },
-}
+let content_rows = {}
 
 const elements = {
     row : () => {let el = document.createElement("div"); el.classList.add("relative", "flex", "justify-between"); return el;},
@@ -29,33 +21,23 @@ const elements = {
 
 // Methods
 
-export function showElement(target_name) {
-    let targets = document.querySelectorAll("[aria-hide][aria-trigger='" + target_name + "']");
-
-    targets.forEach(t => {
-        while (t.closest(".hidden[aria-hide]")) {
-            t.closest(".hidden[aria-hide]").classList.remove("hidden");
-        }
-        t.classList.remove("hidden");
-    });
+export function onReady() {
+    refreshRowList();
+    
 }
 
-export function hideElement(target_name) {
-    let targets = document.querySelectorAll("[aria-hide][aria-trigger=" + target_name + "]");
+function refreshRowList() {
+    let rows = document.querySelectorAll(".content-row");
+    content_rows = {};
 
-    targets.forEach(t => {
-        t.classList.add("hidden");
+    rows.forEach(r => {
+        content_rows[r.id] = r;    
     });
-}
 
-export function hideElementsInId(scope_id) {
-    let scope = document.getElementById(scope_id);
-    let targets = scope.querySelectorAll("[aria-hide]");
-    targets.forEach(t => {
-        if (scope.hasAttribute("aria-hide")) {
-            scope.classList.add("hidden");
-        }
-        t.classList.add("hidden");
+    console.log(content_rows);
+
+    content_rows.forEach(r => {
+        r
     });
 }
 
@@ -63,21 +45,30 @@ export function getCMSElement(key) {
     return elements[key]();
 }
 
-export function showSidebar(key) {
-    document.getElementById("CMSSidebar").setAttribute("aria-hidden", "false");
-
-    document.getElementById("sidebarOverlay").classList.remove("hidden");
-    document.getElementById("sidebarOverlay").classList.add("fixed");
+export function generateUniqueId() {
+    let id = Math.random().toString(16).slice(2); 
+    if (document.getElementById(id)) {
+        generateUniqueId();
+    } else {
+        return id;
+    }
 }
 
-export function hideSidebar() {
-    document.getElementById("CMSSidebar").setAttribute("aria-hidden", "true");
+export function toggleHidden(target) {
+    document.getElementById(target).toggleAttribute("aria-hidden");
+}
 
-    document.getElementById("sidebarOverlay").addEventListener("transitionend", function transitionEnd() {
-        document.getElementById("sidebarOverlay").classList.remove("fixed");
-        document.getElementById("sidebarOverlay").classList.add("hidden");
-        this.removeEventListener("transitionend", transitionEnd);
-    });
+export function toggleTargets(target) {
+    let targets = document.querySelectorAll("[aria-target=" + target + "]");
+
+    if (targets.length > 0) {
+        console.log(targets);
+        targets.forEach(t => {
+            t.toggleAttribute("aria-hidden");
+        });
+    } else {
+        console.log("Warning: target element:" + target + "does not exist.")
+    }
 }
 
 export function appendElement(target_id, key) {
@@ -92,4 +83,12 @@ export function insertElement(target_id, key) {
     let element = getCMSElement(key);
     
     target.appendChild(element);
+}
+
+export function updateStyle(style_name, style_value, element) {
+    if (element) {
+        element.style[style_name] = style_value;
+    } else {
+        document.getElementById("content").style[style_name] = "" + style_value;
+    }
 }

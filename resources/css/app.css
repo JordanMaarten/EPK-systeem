@@ -37,3 +37,19 @@
         stroke-dashoffset: -59
     }
 }
+
+#sidebar {
+    transition: width ease 250ms;
+}
+
+#sidebar[aria-hidden] {
+    width: 0%;
+}
+
+#sidebar .dropdown-item {
+    transition: height ease 250ms;
+}
+
+#sidebar .dropdown-item[aria-hidden]  {
+    height: 0%;
+}
