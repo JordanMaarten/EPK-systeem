@@ -17,27 +17,27 @@ const props = defineProps({
 });
 
 const content = ref();
-const saved_content = new DOMParser().parseFromString(props.saved_data, 'text/html').body;
+const saved_content = CMS.stringToDOM(props.saved_data);
 const parse_error = saved_content.querySelector("parsererror");
 
 const savingHTML = ref(false);
 
 onMounted(() => {
-    // if (parse_error) 
-    // {
-    //     console.log("parse error: process aborted");
-    // } else 
-    // {
-    //     try 
-    //     {
-    //         console.log("Successfuly displayed saved content")
-    //         content.value.appendChild(saved_content);
-    //     } catch 
-    //     {
-    //         console.log('Error while appending child to element with id = "content".');
-    //         content.value.innerHTML = "Oops something went wrong... Could not display saved content."
-    //     }
-    // }
+    if (parse_error) 
+    {
+        console.log("parse error: process aborted");
+    } else 
+    {
+        try 
+        {
+            console.log("Successfuly displayed saved content")
+            content.value.appendChild(saved_content);
+        } catch 
+        {
+            console.log('Error while appending child to element with id = "content".');
+            content.value.innerHTML = "Oops something went wrong... Could not display saved content."
+        }
+    }
 
     function saveHTML() {
         savingHTML.value = true;
@@ -90,16 +90,13 @@ onMounted(() => {
         }
     })
 
-    // document.getElementById("addRow").addEventListener("click", (event) => {
-    //     CMS.addRow(content.value.getElementsByTagName("body")[0]);
-    // });
-
     // use later for automatic saving
     // setInterval(function () {
     
     // } , 5000);
 
     console.log(CMS.hooktest);
+
     CMS.onReady();
 });
 
@@ -121,64 +118,11 @@ onMounted(() => {
                 </div>
             
                 <!-- Tab for element styling -->
-                <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
-                    <h3>Rows</h3>
-                </div>
-                <div class="relative flex flex-col mt-2 mx-2 gap-3">
-                    <div class="border border-slate">
-                        <div @click="CMS.toggleTargets('row1')" class="relative p-3 border-b border-slate cursor-pointer">
-                            <h3>Row 1</h3>
-                        </div>
-                        <div class="dropdown-item flex flex-col overflow-hidden" aria-target="row1">
-                            <div class="relative flex justify-center p-3 border-b border-slate">
-                                <h3>Styling</h3>
-                            </div>
-                            <div class="relative flex flex-col gap-2 justify-center mt-2">
-                                <div class="relative flex justify-between px-3 pb-2 items-center border-b border-slate">
-                                    <span>font size:</span>
-                                    <span>
-                                        <TextInput type="number" class="w-20 h-8" placeholder="16" @input="(event) => CMS.updateStyle('fontSize', ((event.target.value < 50 && event.target.value > 0) ? event.target.value : '16') + 'px')"/>
-                                        <span class="ms-2">px</span>
-                                    </span>
-                                </div>
-                                <div class="relative flex justify-between px-3 pb-2 items-center border-b border-slate">
-                                    <span>font color:</span>
-                                    <span>
-                                        <span>#</span>
-                                        <TextInput type="number" class="w-40 h-8 ms-2" placeholder="000000" @input="(event) => CMS.updateStyle('color', '#' + ((event.target.value) ? event.target.value : '000000'))"/>
-                                    </span>
-                                </div>
-                                <!-- <SecondaryButton class="justify-center mx-5 bg-slate-200 hover:bg-slate-300 !border-none">add style +</SecondaryButton> -->
-                            </div>
-                        </div>
+                 <div>
+                    <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
+                        <h3>Rows</h3>
                     </div>
-                    <div class="border border-slate">
-                        <div @click="CMS.toggleTargets('row1')" class="relative p-3 border-b border-slate cursor-pointer">
-                            <h3>Row 2</h3>
-                        </div>
-                        <div class="dropdown-item flex flex-col overflow-hidden" aria-target="row1">
-                            <div class="relative flex justify-center p-3 border-b border-slate">
-                                <h3>Styling</h3>
-                            </div>
-                            <div class="relative flex flex-col gap-2 justify-center mt-2">
-                                <div class="relative flex justify-between px-3 pb-2 items-center border-b border-slate">
-                                    <span>font size:</span>
-                                    <span>
-                                        <TextInput type="number" class="w-20 h-8" placeholder="16" @input="(event) => CMS.updateStyle('fontSize', ((event.target.value < 50 && event.target.value > 0) ? event.target.value : '16') + 'px')"/>
-                                        <span class="ms-2">px</span>
-                                    </span>
-                                </div>
-                                <div class="relative flex justify-between px-3 pb-2 items-center border-b border-slate">
-                                    <span>font color:</span>
-                                    <span>
-                                        <span>#</span>
-                                        <TextInput type="number" class="w-40 h-8 ms-2" placeholder="000000" @input="(event) => CMS.updateStyle('color', '#' + ((event.target.value) ? event.target.value : '000000'))"/>
-                                    </span>
-                                </div>
-                                <!-- <SecondaryButton class="justify-center mx-5 bg-slate-200 hover:bg-slate-300 !border-none">add style +</SecondaryButton> -->
-                            </div>
-                        </div>
-                    </div>
+                    <div id="sidebarRows" class="relative flex flex-col mt-2 mx-2 gap-3"></div>
                 </div>
                 <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                     <h3>Global Styling</h3>
@@ -217,22 +161,17 @@ onMounted(() => {
                 </template>
                 
                 <div id="main" class="relative">
-                    <SecondaryButton class="absolute top-0 left-0 mt-5 ms-5 !p-2" @click="CMS.toggleSidebar()">
+                    <SecondaryButton @click="CMS.toggleHidden('sidebar')" class="absolute top-0 left-0 mt-5 ms-5 !p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none">
                             <path d="M4 5L10 5M10 5C10 6.10457 10.8954 7 12 7C13.1046 7 14 6.10457 14 5M10 5C10 3.89543 10.8954 3 12 3C13.1046 3 14 3.89543 14 5M14 5L20 5M4 12H16M16 12C16 13.1046 16.8954 14 18 14C19.1046 14 20 13.1046 20 12C20 10.8954 19.1046 10 18 10C16.8954 10 16 10.8954 16 12ZM8 19H20M8 19C8 17.8954 7.10457 17 6 17C4.89543 17 4 17.8954 4 19C4 20.1046 4.89543 21 6 21C7.10457 21 8 20.1046 8 19Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </SecondaryButton>
-                    <div id="content" class="px-[100px]" ref="content">
-                        <div id="00eac7f93c7a7" class="content-row" name="">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora deserunt modi ratione dicta saepe? Numquam magni labore, id soluta quas fugiat ex ducimus consectetur illum asperiores temporibus debitis facere voluptas.</p>
-                        </div>
-                        <div id="08tah1f43c7c8" class="content-row" name="">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora deserunt modi ratione dicta saepe? Numquam magni labore, id soluta quas fugiat ex ducimus consectetur illum asperiores temporibus debitis facere voluptas.</p>
-                        </div>
-                    </div>
+                    <div id="content" class="px-[100px]" ref="content"></div>
                     <Divider/>
                     <div class="flex justify-center">
-                        <SecondaryButton class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
+                        <SecondaryButton @click="CMS.addRow()" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
+                        <SecondaryButton @click="CMS.refreshRowList()" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Refresh</SecondaryButton>
+                        <SecondaryButton @click="CMS.insertElement('7cf88a77f7b2', 'p')" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Insert element</SecondaryButton>
                     </div>
                     <!-- <div class="flex justify-center">
                         <SecondaryButton @click="CMS.appendElement('testpointer', 'p')" class="px-12 text-white bg-emerald-500 hover:bg-emerald-600">Add element test</SecondaryButton>
