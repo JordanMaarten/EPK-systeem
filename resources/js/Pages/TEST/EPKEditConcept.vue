@@ -35,7 +35,7 @@ onMounted(() => {
         } catch 
         {
             console.log('Error while appending child to element with id = "content".');
-            content.value.innerHTML = "Oops something went wrong... Could not display saved content."
+            content.value.innerHTML = "Oops... Could not display saved content."
         }
     }
 
@@ -55,9 +55,7 @@ onMounted(() => {
         });
     }
 
-    document.getElementById("saveButton").addEventListener("click", (event) => {
-        saveHTML();
-    });
+    document.getElementById("saveButton").addEventListener("click", () => saveHTML());
 
     
     const sidebar = document.getElementById("sidebar");
@@ -92,7 +90,7 @@ onMounted(() => {
 
     // use later for automatic saving
     // setInterval(function () {
-    
+    //     console.log(content.value.innerHTML);
     // } , 5000);
 
     console.log(CMS.hooktest);
@@ -112,7 +110,8 @@ onMounted(() => {
                     <h2 class="text-lg">Overview</h2>
                     <a @click="CMS.toggleHidden('sidebar')" class="!p-1 text-center cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="-1 0 25 25" fill="none">
-                            <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#0F0F0F"/>
+                            <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" 
+                            fill="#0F0F0F"/>
                         </svg>
                     </a>
                 </div>
@@ -163,7 +162,8 @@ onMounted(() => {
                 <div id="main" class="relative">
                     <SecondaryButton @click="CMS.toggleHidden('sidebar')" class="absolute top-0 left-0 mt-5 ms-5 !p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none">
-                            <path d="M4 5L10 5M10 5C10 6.10457 10.8954 7 12 7C13.1046 7 14 6.10457 14 5M10 5C10 3.89543 10.8954 3 12 3C13.1046 3 14 3.89543 14 5M14 5L20 5M4 12H16M16 12C16 13.1046 16.8954 14 18 14C19.1046 14 20 13.1046 20 12C20 10.8954 19.1046 10 18 10C16.8954 10 16 10.8954 16 12ZM8 19H20M8 19C8 17.8954 7.10457 17 6 17C4.89543 17 4 17.8954 4 19C4 20.1046 4.89543 21 6 21C7.10457 21 8 20.1046 8 19Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M4 5L10 5M10 5C10 6.10457 10.8954 7 12 7C13.1046 7 14 6.10457 14 5M10 5C10 3.89543 10.8954 3 12 3C13.1046 3 14 3.89543 14 5M14 5L20 5M4 12H16M16 12C16 13.1046 16.8954 14 18 14C19.1046 14 20 13.1046 20 12C20 10.8954 19.1046 10 18 10C16.8954 10 16 10.8954 16 12ZM8 19H20M8 19C8 17.8954 7.10457 17 6 17C4.89543 17 4 17.8954 4 19C4 20.1046 4.89543 21 6 21C7.10457 21 8 20.1046 8 19Z" 
+                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </SecondaryButton>
                     <div id="content" class="px-[100px]" ref="content"></div>
