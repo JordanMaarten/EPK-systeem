@@ -121,7 +121,7 @@ onMounted(() => {
                     <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                         <h3>Rows</h3>
                     </div>
-                    <div id="sidebarRows" class="relative flex flex-col mt-2 mx-2 gap-3"></div>
+                    <div class="relative flex flex-col mt-2 mx-2 gap-3" list-id="content-body"></div>
                 </div>
                 <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                     <h3>Global Styling</h3>
@@ -169,9 +169,9 @@ onMounted(() => {
                     <div id="content" class="px-[100px]" ref="content"></div>
                     <Divider/>
                     <div class="flex justify-center">
-                        <SecondaryButton @click="CMS.addRow()" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
-                        <SecondaryButton @click="CMS.refreshRowList()" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Refresh</SecondaryButton>
-                        <SecondaryButton @click="CMS.insertElement('7cf88a77f7b2', 'p')" class="px-12 text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Insert element</SecondaryButton>
+                        <SecondaryButton @click="CMS.addRow()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
+                        <SecondaryButton @click="CMS.refreshRowList()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Refresh</SecondaryButton>
+                        <SecondaryButton @click="CMS.addElement('p', '741d735d502f6')" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Insert element</SecondaryButton>
                     </div>
                     <!-- <div class="flex justify-center">
                         <SecondaryButton @click="CMS.appendElement('testpointer', 'p')" class="px-12 text-white bg-emerald-500 hover:bg-emerald-600">Add element test</SecondaryButton>

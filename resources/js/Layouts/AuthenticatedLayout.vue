@@ -11,14 +11,15 @@ import { Link } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 window.addEventListener("scroll", (event) => {
+    let header = document.querySelector('header');
     if (document.getElementById("primaryNav").getBoundingClientRect().bottom <= 0) {
-        document.getElementById("primaryNav").style.marginBottom = document.getElementsByTagName('header')[0].offsetHeight + "px";
-        document.getElementsByTagName("header")[0].classList.remove("relative");
-        document.getElementsByTagName("header")[0].classList.add("fixed");
+        document.getElementById("primaryNav").style.marginBottom = header.offsetHeight + "px";
+        header.classList.remove("relative");
+        header.classList.add("fixed");
     } else {
         document.getElementById("primaryNav").style.marginBottom = "0px";
-        document.getElementsByTagName("header")[0].classList.remove("fixed");
-        document.getElementsByTagName("header")[0].classList.add("relative");
+        header.classList.remove("fixed");
+        header.classList.add("relative");
     }
 })
 
