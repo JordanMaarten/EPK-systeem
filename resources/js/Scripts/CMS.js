@@ -99,7 +99,7 @@ const cms_templates = {
 
 // Executes when the doc AND vue setup are ready.
 export function onReady() {
-    refreshRowList();
+    updateContentLink();
 }
 
 // Returns only one DOM element and all it's children. CSS is still applied after parsing.
@@ -120,24 +120,17 @@ export function stringToDOM(string) {
  * Exceptions:
  * - some extra click events like row deletion
  */
-export function updateContentLinkedList() {
+export function updateContentLink() {
     const content_body = document.getElementById("content-body");
-    const content_rows = content_body.getElementsByClassName("content-row");
-    const cr_linked_list = document.getElementById("[list-id='content-body']");
+    const ContentLink = new LinkedElement(content_body, document.getElementById("sidebar_rows"), ["name"]); 
 
-    for (const cr of content_rows) {
-        let cr_linked_item = cr_linked_list.querySelector("[link-id='" + cr.id + "']");
-        if (cr_linked_item) {
-            console.log("found: " + cr.id);
-            updateLinkedList(cr);
-            cr_linked_item.querySelector(".row_title").innerHTML = cr_linked_item.getAttribute("name");
+    console.log(ContentLink.getChildren());
+
+    for (const child of ContentLink.getChildren()) {
+        if (ContentLink) {
+            console.log("found: " + child.id);
         } else {
-            console.log("added: " + cr.id);
-            createLinkedItem(stringToDOM(sidebar_templates.sidebar_content_row), cr);
-            cr_linked_item = stringToDOM(sidebar_templates.sidebar_content_row);
-            cr_linked_item.setAttribute("name", cr.getAttribute("name"));
-            cr_linked_item.setAttribute("link-id", cr.id);
-            
+            console.log("added: " + child.id);
         }
     }
     //     if (sidebar_row) {
@@ -298,19 +291,55 @@ function updateLinkedList(list) {
     }
 }
 
-function createLinkedItem(link, ) // PROCEED
+function LinkedElement(target, link, attributes) {
+    const element = target;
+    let linked_element = link;
+    let attr = [];
 
-/** updates the values of a single linked item
- * 
- * @param {HTMLElement} item 
- */
-function updateLinkedItem(item) {
-    const linked_item = document.querySelector("[link-id='" + item.id + "']");
-    
-    if (linked_item) { 
-        linked_item.setAttribute("name", item.getAttribute("name"));
-    } else {
-        console.log(`updateLinkedItem: linked item could not be found with link-id: "${item.id}". Skipping...`);
+    if (typeof attributes === "object") {
+        attr = attributes;
+    }
+
+    this.newLinkedElement = (target) => {
+        if (typeof target === "object") {
+            linked_element = target;
+        } else {
+            console.log(`(${this}) LinkedElement.newLinkedElement: argument "${target}" is not of type "object"`);
+        }
+    }
+
+    this.addAttribute = (attribute) => {
+        if (!attr.contains(attribute) && typeof attribute === "string") {
+            attr.push(attribute);
+        } else {
+            console.log(`(${this}) LinkedElement.addAttribute: argument "${attribute}" is not of type "string"`);
+        }
+    }
+
+    this.getElement = () => {
+        return element;
+    }
+
+    this.getLinkedElement = () => {
+        return linked_element;
+    }
+
+    this.getChildren = () => {
+        return element.children;
+    }
+
+    this.getLinkedChildren = () => {
+        return linked_element.children;
+    }
+
+    this.updateLink = () => {
+        for (attribute of attr) {
+            try {
+                linked_element.setAttribute(attribute, element.getAttribute(attribute));
+            } catch {
+                console.log(`(${this}) LinkedElement.updateLink: could not set attribute "${attribute}" of linked element "${linked_element}". Please check if element "${element}" has the attribute "${attribute}"`);
+            }
+        }
     }
 }
 

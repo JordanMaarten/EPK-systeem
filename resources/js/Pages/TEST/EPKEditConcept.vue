@@ -121,7 +121,7 @@ onMounted(() => {
                     <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                         <h3>Rows</h3>
                     </div>
-                    <div class="relative flex flex-col mt-2 mx-2 gap-3" list-id="content-body"></div>
+                    <div id="sidebar_rows" class="relative flex flex-col mt-2 mx-2 gap-3"></div>
                 </div>
                 <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                     <h3>Global Styling</h3>
