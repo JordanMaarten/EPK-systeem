@@ -4,7 +4,7 @@
 
 // A collection of sidebar element templates to be added to the sidebar.
 // Downsides are that you can't add onclick events inside the html doc, this will have to be done as javascript code.
-const sidebar_templates = {
+const SIDEBAR_TEMPLATES = {
     sidebar_content_row: `
         <div class="border border-slate" link-id>
             <div class="flex justify-between p-3 border-b border-slate cursor-pointer">
@@ -85,38 +85,80 @@ const cms_templates = {
     
 }
 
-export default new class CMS {
-    constructor() {
+const LINK_PROPERTIES = {};
 
-    }
+export default new class CMS {
+    constructor() {}
 
     /**
-     * @param {HTMLElement} content
-     * @param {ContentLink} link
-     * @param {Array} default_attributes
+     * All elements from "linked_element" with the attribute "link-id" are affected by the ElementLink methods.
+     * This class cannot create elements, it will only link the attributes and values of the corresponding id between the two elements.
+     * 
+     * @param {HTMLElement} content the content to link (holds the text data and id)
+     * @param {HTMLElement} linked the element that that will hold the linked elements
      */
-    setup(content, link, default_attributes) {
+    setupLink(content, linked) {
         if (typeof content === "object") {
-            if (typeof link === "object") {
+            if (typeof linked === "object") {
                 this.content = content;
-                this.link = new ContentLink(content, link, default_attributes);
+                this.linked = linked;
+
+                try {
+                    let link_elements = this.content.querySelectorAll("[link]");
+            
+                    for (let le of link_elements) {
+                        LINK_PROPERTIES[le.id] = {
+                            name: (le.hasAttribute("name") ? le.getAttribute("name") : "undefined"),
+                            text: le.innerHTML
+                        }
+                    }
+
+                    console.log("LINK_PROPERTIES set");
+                } catch {
+                    console.log("LINK_PROPERTIES could not be initialized");
+                }
             } else {
-                console.log(`ERROR at CMS.setup(): link argument "${link}" is not of type "element"`);
+                console.log(`ERROR at CMS.setupLink(): linked argument "${linked}" is not of type "element"`);
             }
         } else {
-            console.log(`ERROR at CMS.setup(): content argument "${content}" is not of type "element"`);
-        } 
+            console.log(`ERROR at CMS.setupLink(): content argument "${content}" is not of type "element"`);
+        }
     }
 
-    getContent() {
-        return this.content;
+    addContent(id, template_name = "p", link_name) {
+        let new_element = this.stringToDOM(cms_templates[template_name]);
+
+        new_element.setAttribute("id", generateUniqueId());
+        new_element.setAttribute("name", (link_name ? link_name : template_name));
+
+        try {
+            this.content.getElementById(id).appendChild(new_element);
+
+            LINK_PROPERTIES[new_element.id] = {
+                name: new_element.getAttribute("name"),
+                text: new_element.innerHTML
+            }
+        } catch {
+            console.log("");
+        }
     }
 
-    getLinked() {
-        if (this.link) {
-            return this.link.getLink();
-        } else {
-            console.log(`ERROR at CMS.getLinked(): link has not been set, please use setup method first`);
+    updateContent() {
+        for (const [id, properties] of Object.entries(LINK_PROPERTIES)) {
+            if (this.content.getElementById(id)) {
+                let linked_element = this.content.getElementById(id);
+
+                for (const [property, value] of Object.entries(properties)) {
+                    switch(property) {
+                        case "name":
+                            linked_element.setAttribute("name", value);
+                            break;
+                        case "text":
+                            linked_element.innerHTML = value;
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -135,51 +177,7 @@ export default new class CMS {
 
 
 //== Classes ==//
-/**
- * All elements from "linked_element" with the attribute "link-id" are affected by the ElementLink methods.
- * This class cannot create elements, it will only link the attributes and values of the corresponding id between the two elements.
- * 
- * @param {HTMLElement} content the content to link (holds the text data and id)
- * @param {HTMLElement} link the element that that will hold the linked elements
- * @param {Array} default_attributes array or string of the default linked attributes (has to be iterable!)
- */
-class ContentLink {
-    constructor(content, link, default_attributes) {
-        this.content = content;
-        this.link = link;
-        this.linked_attr = [];
 
-        if (typeof default_attributes === "string") {
-            this.linked_attr = [default_attributes];
-        }
-
-        if (typeof default_attributes === "object") {
-            try {
-                for (let a of default_attributes) {
-                    this.linked_attr.push(a);
-                }
-            } catch {
-                console.log(`ERROR at ContentLink constructor(): attributes argument "${default_attributes}" is invalid. Please assign an iterable array or string`);
-            }
-        } 
-    }
-
-    getLink() {
-        return this.link;
-    }
-
-    setLink(element) {
-        if (typeof element === "object") {
-            this.link = element;
-        } else {
-            console.log(`ERROR at ContentLink.setLink(): element argument "${element}" is not of type "element"`);
-        }
-    }
-
-    update() {
-
-    }
-}
 
 /**
  * All elements from "linked_element" with the attribute "link-id" are affected by the ElementLink methods.
@@ -189,75 +187,75 @@ class ContentLink {
  * @param {HTMLElement} link the linked element
  * @param {Array} attributes array or string of the default linked attributes (has to be iterable!)
  */
-class ElementLink {
-    constructor(target, link) {
-        this.element = target;
-        this.link = link;
-        this.data = {};
-    }
+// class ElementLink {
+//     constructor(target, link) {
+//         this.element = target;
+//         this.link = link;
+//         this.data = {};
+//     }
 
-    // this.addAttribute = (attribute) => {
-    //     if (!attr.contains(attribute) && typeof attribute === "string") {
-    //         attr.push(attribute);
-    //     } else {
-    //         if (!typeof attribute === "string") {
-    //             console.log(`(${this}) ElementLink.addAttribute: argument "${attribute}" is not of type "string"`);
-    //         } else {
-    //             console.log(`(${this}) ElementLink.addAttribute: array "${attr}" already contains argument "${attribute}"`);
-    //         }
-    //     }
-    // }
+//     // this.addAttribute = (attribute) => {
+//     //     if (!attr.contains(attribute) && typeof attribute === "string") {
+//     //         attr.push(attribute);
+//     //     } else {
+//     //         if (!typeof attribute === "string") {
+//     //             console.log(`(${this}) ElementLink.addAttribute: argument "${attribute}" is not of type "string"`);
+//     //         } else {
+//     //             console.log(`(${this}) ElementLink.addAttribute: array "${attr}" already contains argument "${attribute}"`);
+//     //         }
+//     //     }
+//     // }
 
-    getElement() {
-        return this.element;
-    }
+//     getElement() {
+//         return this.element;
+//     }
 
-    getLinkedElement() {
-        return this.link;
-    }
+//     getLinkedElement() {
+//         return this.link;
+//     }
 
-    setLinkedElement(target) {
-        if (typeof target === "object") {
-            this.link = target;
-        } else {
-            console.log(`(${this}) ElementLink.setLinkedElement: argument "${target}" is not of type "object"`);
-        }
-    }
+//     setLinkedElement(target) {
+//         if (typeof target === "object") {
+//             this.link = target;
+//         } else {
+//             console.log(`(${this}) ElementLink.setLinkedElement: argument "${target}" is not of type "object"`);
+//         }
+//     }
 
-    getData(id) {
-        return this.data[id];
-    }
+//     getData(id) {
+//         return this.data[id];
+//     }
 
-    setData() {
-        for (let e of this.element.querySelectorAll("[id]")) {
-            this.data[e.id] = {
-                element: e,
-                text: e.innerHTML,
-            }
+//     setData() {
+//         for (let e of this.element.querySelectorAll("[id]")) {
+//             this.data[e.id] = {
+//                 element: e,
+//                 text: e.innerHTML,
+//             }
 
-            for (let a of this.linked_attr) {
-                this.data[e.id].attr[a] = e.getAttribute(a);
-            }
-        }
-    }
+//             for (let a of this.linked_attr) {
+//                 this.data[e.id].attr[a] = e.getAttribute(a);
+//             }
+//         }
+//     }
 
-    removeData(id) {
-        delete this.data[id];
-    }
+//     removeData(id) {
+//         delete this.data[id];
+//     }
 
-    updateData(id, key, value) {
-        this.data[id][key] = value;
-    }
+//     updateData(id, key, value) {
+//         this.data[id][key] = value;
+//     }
 
-    updateLink() {
-        for (let d of this.data) {
-            d.element.innerHTML = d.text;
-            for (const [name, value] of Object.entries(this.data.attr)) {
-                d.element.setAttribute(name, value);
-            }
-        }
-    }
-}
+//     updateLink() {
+//         for (let d of this.data) {
+//             d.element.innerHTML = d.text;
+//             for (const [name, value] of Object.entries(this.data.attr)) {
+//                 d.element.setAttribute(name, value);
+//             }
+//         }
+//     }
+// }
 
 // Will refresh the row list in the sidebar, sorting the list.
 // Creates a new row and adds it to the sidebar when one does not exist for an existing row in the content body.
@@ -443,34 +441,6 @@ export function updateContentLink() {
 //         console.log(`updateLinkedList: linked list could not be found with list-id: "${list.id}". Skipping... `);
 //     }
 // }
-
-
-
-// Adds a row to the content body. If element content body does not exist, then a new one will be created.
-export function addRow() {
-    if (document.getElementById("content_body")) {
-        let content_body = document.getElementById("content_body");
-    } else {
-        let content_body = document.createElement("div");
-        content_body.setAttribute("id", "content_body");
-        document.getElementById("content").appendChild(content_body);
-    }
-    let row = stringToDOM(cms_templates.row);
-    row.setAttribute("id", generateUniqueId());
-
-    content_body.appendChild(row);
-    refreshRowList();
-}
-
-export function removeRow(id) {
-    try {
-        document.getElementById(id).remove();
-        document.getElementById("sidebarRows").querySelector("[row-id='" + id + "']").remove();
-        refreshRowList();
-    } catch {
-        return console.log(`Error: row with id: ${id}, could not be removed / does not exist`);
-    }
-}
 
 // Generates a unique id to use as attribute.
 export function generateUniqueId() {

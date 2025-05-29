@@ -3,7 +3,7 @@
 import { onMounted, ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
-import CMS from '@/Scripts/cms';
+import CMS from '@/Scripts/CMS';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -91,10 +91,10 @@ onMounted(() => {
     // setInterval(function () {
     //     console.log(content.value.innerHTML);
     // } , 5000);
-    CMS.setup(
+    CMS.setupLink(
         document.getElementById("content-body"), 
-        document.getElementById("sidebar"), 
-        ["name"]);
+        document.getElementById("sidebar")
+    );
 });
 
 </script>
