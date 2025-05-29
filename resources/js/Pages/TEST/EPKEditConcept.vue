@@ -3,7 +3,7 @@
 import { onMounted, ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
-import * as CMS from '@/Scripts/CMS';
+import CMS from '@/Scripts/cms';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -56,7 +56,6 @@ onMounted(() => {
     }
 
     document.getElementById("saveButton").addEventListener("click", () => saveHTML());
-
     
     const sidebar = document.getElementById("sidebar");
     const sidebar_content = sidebar.getElementsByClassName("content")[0];
@@ -92,10 +91,10 @@ onMounted(() => {
     // setInterval(function () {
     //     console.log(content.value.innerHTML);
     // } , 5000);
-
-    console.log(CMS.hooktest);
-
-    CMS.onReady();
+    CMS.setup(
+        document.getElementById("content-body"), 
+        document.getElementById("sidebar"), 
+        ["name"]);
 });
 
 </script>
