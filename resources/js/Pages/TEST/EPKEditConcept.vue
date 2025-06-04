@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
 import CMS from '@/Scripts/CMS';
+import { stringToDOM } from "@/Scripts/util";
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -17,7 +18,7 @@ const props = defineProps({
 });
 
 const content = ref();
-const saved_content = CMS.stringToDOM(props.saved_data);
+const saved_content = stringToDOM(props.saved_data);
 const parse_error = saved_content.querySelector("parsererror");
 
 const savingHTML = ref(false);
@@ -93,8 +94,10 @@ onMounted(() => {
     // } , 5000);
     CMS.setupLink(
         document.getElementById("content-body"), 
-        document.getElementById("sidebar")
+        document.getElementById("sidebar-content")
     );
+
+    CMS.updateSidebar();
 });
 
 </script>
@@ -120,7 +123,7 @@ onMounted(() => {
                     <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                         <h3>Rows</h3>
                     </div>
-                    <div id="sidebar_rows" class="relative flex flex-col mt-2 mx-2 gap-3"></div>
+                    <div id="sidebar-content" class="relative flex flex-col mt-2 mx-2 gap-3"></div>
                 </div>
                 <div class="relative flex justify-center mt-5 py-1 border-b border-slate-300 shadow-sm">
                     <h3>Global Styling</h3>
@@ -129,7 +132,7 @@ onMounted(() => {
                     <div class="relative flex justify-between px-3 pb-2 items-center border-b border-slate">
                         <span>font size:</span>
                         <span>
-                            <TextInput type="number" class="w-20 h-8" placeholder="16" @input="(event) => CMS.updateStyle('fontSize', ((event.target.value < 50 && event.target.value > 0) ? event.target.value : '16') + 'px')"/>
+                            <input type="number" min="8" max="50" excluded="[A-z]" unit="px" name="fontSize" class="w-20 h-8 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="16" placeholder="16" target/>
                             <span class="ms-2">px</span>
                         </span>
                     </div>
@@ -137,7 +140,7 @@ onMounted(() => {
                         <span>font color:</span>
                         <span>
                             <span>#</span>
-                            <TextInput type="number" class="w-40 h-8 ms-2" placeholder="000000" @input="(event) => CMS.updateStyle('color', '#' + ((event.target.value) ? event.target.value : '000000'))"/>
+                            <input type="number" class="w-40 h-8 ms-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="000000" @input="(event) => CMS.updateStyle('color', '#' + ((event.target.value) ? event.target.value : '000000'))"/>
                         </span>
                     </div>
                     <!-- <SecondaryButton class="justify-center mx-5 bg-slate-200 hover:bg-slate-300 !border-none">add style +</SecondaryButton> -->
@@ -169,8 +172,12 @@ onMounted(() => {
                     <Divider/>
                     <div class="flex justify-center">
                         <SecondaryButton @click="CMS.addRow()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
-                        <SecondaryButton @click="CMS.refreshRowList()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Refresh</SecondaryButton>
+                        <SecondaryButton @click="CMS.updateSidebar()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Refresh</SecondaryButton>
                         <SecondaryButton @click="CMS.addElement('p', '741d735d502f6')" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Insert element</SecondaryButton>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <div class="w-[50px] h-[50px] bg-emerald-600"></div>
                     </div>
                     <!-- <div class="flex justify-center">
                         <SecondaryButton @click="CMS.appendElement('testpointer', 'p')" class="px-12 text-white bg-emerald-500 hover:bg-emerald-600">Add element test</SecondaryButton>
