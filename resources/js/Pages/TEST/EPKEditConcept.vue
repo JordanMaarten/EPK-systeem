@@ -17,7 +17,7 @@ const props = defineProps({
     saved_data: String
 });
 
-const content = ref();
+const content_env = ref();
 const saved_content = stringToDOM(props.saved_data);
 const parse_error = saved_content.querySelector("parsererror");
 
@@ -32,11 +32,11 @@ onMounted(() => {
         try 
         {
             console.log("Successfuly displayed saved content")
-            content.value.appendChild(saved_content);
+            content_env.value.appendChild(saved_content);
         } catch 
         {
             console.log('Error while appending child to element with id = "content".');
-            content.value.innerHTML = "Oops... Could not display saved content."
+            content_env.value.innerHTML = "Oops... Could not display saved content."
         }
     }
 
@@ -45,12 +45,13 @@ onMounted(() => {
         
         axios.post('/test/store', {
             epk_id: props.epk_id,
-            data: content.value.innerHTML
+            data: content_env.value.innerHTML
         }).then(function (response) {
             console.log(response);
             console.log("Succesfully saved data to DB");
         }).catch(function (response) {
             console.log(response);
+            console.log("Error might be caused by incorrect html syntax");
         }).finally(() => {
             savingHTML.value = false;
         });
@@ -92,7 +93,7 @@ onMounted(() => {
     // setInterval(function () {
     //     console.log(content.value.innerHTML);
     // } , 5000);
-    CMS.setupLink(
+    CMS.setup(
         document.getElementById("content-body"), 
         document.getElementById("sidebar-content")
     );
@@ -168,7 +169,7 @@ onMounted(() => {
                             stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </SecondaryButton>
-                    <div id="content" class="px-[100px]" ref="content"></div>
+                    <div id="content-env" class="px-[100px]" ref="content_env"></div>
                     <Divider/>
                     <div class="flex justify-center">
                         <SecondaryButton @click="CMS.addRow()" class="text-white !bg-emerald-500 hover:!bg-emerald-600 shadow-sm">Add new row +</SecondaryButton>
