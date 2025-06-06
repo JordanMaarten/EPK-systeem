@@ -1,7 +1,6 @@
 'use strict';
 
 import { stringToDOM } from "@/Scripts/util";
-import { document } from "postcss";
 
 //== Templates ==// maybe import via seperate file
 
